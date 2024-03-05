@@ -1,0 +1,5 @@
+- Una mesa se considera libre si no tiene reserva una hora antes y una hora después (no estaría preparada la mesa)
+- no hay sistema de login para el usuario, pero sí para el jefe de sala.
+- Mandar por email el ticket de la reserva (fpdf + axigen)
+- que no pueda seleccionar mesas de superior tamaño si hay libres, si no hay libres enseñar las del tamaño siguiente.
+Si son 4 comensales, mostrar las mesas de 4. Si no hay mesas de 4 libres, entonces mostrar las de 8.
