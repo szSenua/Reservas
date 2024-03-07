@@ -18,5 +18,11 @@ echo "<pre>";
 var_dump($mesasDisponibles);
 echo "</pre>";
 
+if(count($mesasDisponibles) > 0){
+    echo "hay mesas";
+} else {
+    header("Location : opciones.php");
+}
+
 
 ?>
