@@ -112,3 +112,24 @@ function existeUsuario($con, $email, $contrasena){
         );
     }
 }
+
+function reservarMesa($con, $email, $restaurante, $numMesa, $fecha, $hora, $comensales){
+
+    $sql = "INSERT INTO reservas (numMesa, restaurante, email, fecha, hora, estado, numPersonas)
+    VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    $estado = 'R';
+
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(1, $numMesa);
+    $stmt->bindParam(2, $restaurante);
+    $stmt->bindParam(3, $email);
+    $stmt->bindParam(4, $fecha);
+    $stmt->bindParam(5, $hora);
+    $stmt->bindParam(6, $estado);
+    $stmt->bindParam(7, $comensales);
+
+    $estado = $stmt->execute();
+
+    return $estado;
+}

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,9 +16,9 @@
         nav {
             background-color: #342042;
             overflow: hidden;
-            position:sticky;
+            position: sticky;
             top: 0;
-            
+
         }
 
         nav a {
@@ -41,22 +42,34 @@
     </style>
     <title></title>
 </head>
+
 <body>
-<?php
+    <nav>
+        <?php
 
-session_start();
+        session_start();
+
+        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
+
+        ?>
+            <a href="index.php">Realizar una reserva</a>
+            <a href="logout.php">Cerrar Sesión</a>
 
 
-?>
+        <?php
 
-<nav>
-    
-    <a href="login.php">Zona Administrador</a>
-    <a href="index.php">Realizar una reserva</a>
-    
-    
-</nav>
+        } else {
+        ?>
 
+            <a href="login.php">Zona Administrador</a>
+            <a href="index.php">Realizar una reserva</a>
+
+        <?php
+        }
+
+        ?>
+    </nav>
 
 </body>
+
 </html>
