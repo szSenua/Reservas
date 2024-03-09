@@ -64,7 +64,7 @@ function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora)
     }
 
     // Consulta para obtener las mesas disponibles
-    $sql = "SELECT mesa.numMesa, mesa.capacidad
+    $sql = "SELECT mesa.numMesa, mesa.capacidad, mesa.ncolumna, mesa.nfila
             FROM mesa
             LEFT JOIN reservas
             ON mesa.numMesa = reservas.numMesa
