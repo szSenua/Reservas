@@ -11,7 +11,7 @@ if (isset($_SESSION['mensaje_reserva']) && isset($_SESSION['datos_reserva'])) {
     unset($_SESSION['datos_reserva']);
 } else {
     // Si no hay datos en la sesión, redireccionar al usuario a otra página
-    header("Location: otra_pagina.php");
+    header("Location: menu.php");
     exit();
 }
 ?>
