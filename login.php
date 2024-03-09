@@ -1,28 +1,45 @@
 <?php
 require_once 'conecta.php';
+require_once 'funciones.php';
 
-$email = "";
-$contrasena = "";
+$email = '';
+$contrasena = '';
 
 $errores = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
 
-    if (empty($email)) {
+    if (empty($_POST['email'])) {
         $errores[] = "Debes introducir un email";
     } else {
         $email = $_POST['email'];
     }
 
-    if (empty($contrasena)) {
+    if (empty($_POST['contrasena'])) {
         $errores[] = "La contraseña es incorrecta";
     } else {
-        $contrasnea = $_POST['contrasena'];
+        $contrasena = $_POST['contrasena'];
     }
 
     if(count($errores) === 0){
 
-        //Verifica el usuario
+    $adminData = existeUsuario($con, $email, $contrasena);
+
+    if($adminData){
+        session_start();
+        $_SESSION['email'] = $email;
+        $_SESSION['nombreUsuario'] = $adminData['nombre'];
+        $_SESSION['tipoUsuario'] = $adminData['tipo'];
+        $_SESSION['logged_in'] = true;
+
+        header("Location: menu.php");
+        exit();
+    } else {
+        // Si el usuario no es válido, mostrar el formulario de login con errores
+        $errores[] = 'Usuario o contraseña incorrectos';
+        
+    
+    }
     }
 }
 
@@ -57,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
 
             ?>
             <h2>Bienvenid@ al login</h2>
-            <input type="text" name="dni" value="<?php echo !empty($email) ? htmlspecialchars($email) : ''; ?>" placeholder="Email">
+            <input type="text" name="email" value="<?php echo !empty($email) ? htmlspecialchars($email) : ''; ?>" placeholder="Email">
             <input type="password" name="contrasena" value="<?php echo !empty($contrasena) ? htmlspecialchars($contrasena) : ''; ?>" placeholder="Contraseña">
             <input type="submit" value="Enviar" class="submit" name="enviar">
             <a href="index.php">Volver</a>

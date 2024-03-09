@@ -92,3 +92,23 @@ function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora)
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function existeUsuario($con, $email, $contrasena){
+    $sql = "SELECT * FROM administradores where email = ? and contrasena = ?";
+
+    $stmt = $con->prepare($sql);
+    $stmt -> bindParam(1, $email);
+    $stmt -> bindParam(2, $contrasena);
+
+    $stmt -> execute();
+    if ($stmt->rowCount() > 0) {
+        $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Cerrar conexión
+        require_once 'desconecta.php';
+        return array(
+            'tipo' => 'administrador',
+            'email' => $adminData['email'],
+            'nombre' => $adminData['nombre']
+        );
+    }
+}
