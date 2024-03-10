@@ -90,7 +90,7 @@ foreach ($restaurantes as $restaurante) {
 Le ofrecemos las siguientes alternativas:</h2>
 
     <div class="form-container">
-        <form action="nueva_reserva.php" method="post">
+        <form action="reserva_restaurante_alternativo.php" method="post">
             <h3>Seleccione otro restaurante:</h3>
             <select name="nuevo_restaurante">
                 <option value="<?php echo $restauranteAlternativo; ?>"><?php echo $restauranteAlternativo; ?></option>

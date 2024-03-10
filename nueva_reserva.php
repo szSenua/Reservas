@@ -138,6 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['consultar_tiempo'])) 
         'comensales' => $comensales
     ];
 
+    require_once 'desconecta.php';
+
     header("Location: realizar_reserva.php");
 
     

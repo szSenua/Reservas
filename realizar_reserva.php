@@ -35,10 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
                 'hora' => $hora,
                 'comensales' => $comensales
             ];
+            require_once 'desconecta.php';
             header("Location: mensajes.php");
             exit();
         } else {
             $_SESSION['mensaje_reserva'] = "No se ha podido realizar la reserva.";
+            require_once 'desconecta.php';
+            header("Location: mensajes.php");
+            exit();
         }
     }
 }
