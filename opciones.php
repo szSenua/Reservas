@@ -18,6 +18,7 @@ $restauranteAlternativo = "";
 foreach ($restaurantes as $restaurante) {
     if ($restaurante['restaurante'] !== $restauranteSeleccionado) {
         $restauranteAlternativo = $restaurante['restaurante'];
+        $_SESSION['alternativo'] = $restauranteAlternativo;
         break; // Solo necesitamos uno alternativo, así que salimos del bucle
     }
 }

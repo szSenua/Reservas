@@ -18,14 +18,15 @@ $hora_formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDa
 
 // Si no hay mesas disponibles con la capacidad indicada, intentar con el doble de la capacidad
 if (count($mesasDisponibles) == 0) {
-    $mesasDisponibles = obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora, $comensales * 2);
+    $mesasDisponibles = obtenerMesasDisponibles($con, $restaurante, $comensales * 2, $fecha, $hora);
+    
+    // Si aún no hay mesas disponibles después de intentar con el doble de la capacidad, redirigir a opciones.php
+    if (count($mesasDisponibles) == 0) {
+        header("Location: opciones.php");
+        exit(); // Asegúrate de salir después de redirigir para evitar que el script siga ejecutándose.
+    }
 }
 
-// Si todavía no hay mesas disponibles, redirigir al usuario a la página de opciones
-if (count($mesasDisponibles) == 0) {
-    header("Location: opciones.php");
-    exit();
-}
 
 $numMesa;
 $errores = array();
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
         $numMesa = $_POST['mesa'];
     }
 
-    if(count($errores) == 0){
+    if (count($errores) == 0) {
         //Si soy administrador, proceso la reserva directamente.
         if ($_SESSION['tipoUsuario']) {
             //Si el usuario es un administrador entonces no hace falta que meta el email de la reserva.
@@ -59,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
             } else {
                 $_SESSION['mensaje_reserva'] = "No se ha podido realizar la reserva.";
             }
-            
         } else {
             $_SESSION['datos_reserva'] = [
                 'restaurante' => $restaurante,
@@ -71,8 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
 
             header("Location: reservarUsuario.php");
         }
-
-
     }
 }
 
@@ -80,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,11 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
             border-collapse: collapse;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: center;
         }
@@ -120,11 +122,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: auto; /* Centra el círculo horizontalmente dentro de la celda */
+            margin: auto;
+            /* Centra el círculo horizontalmente dentro de la celda */
         }
 
         .circle span {
-            text-align: center; /* Centra el texto horizontalmente dentro del círculo */
+            text-align: center;
+            /* Centra el texto horizontalmente dentro del círculo */
         }
 
         input[type="submit"] {
@@ -144,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
         }
     </style>
 </head>
+
 <body>
     <h1>Mesas Disponibles</h1>
     <?php if (!empty($errores)) : ?>
@@ -154,7 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
         </div>
     <?php endif; ?>
     <form action="" method="post">
-    <p>Fecha: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::FULL, IntlDateFormatter::NONE))->format(new DateTime($fecha)); ?>. <p>Hora: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::SHORT))->format(new DateTime($hora)); ?></p>
+        <p>Fecha: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::FULL, IntlDateFormatter::NONE))->format(new DateTime($fecha)); ?>.
+        <p>Hora: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::SHORT))->format(new DateTime($hora)); ?></p>
 
         <p>Número de comensales: <?php echo $comensales; ?></p>
         <table border="1">
@@ -178,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
         <input type="submit" value="Reservar" name="reservar">
     </form>
 </body>
+
 </html>
 
 <?php

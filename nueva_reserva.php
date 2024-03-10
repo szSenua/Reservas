@@ -3,9 +3,6 @@ require_once 'menu.php';
 require_once 'conecta.php';
 require_once 'funciones.php';
 
-// Iniciar sesión si no se ha iniciado aún
-
-
 $restaurante = null;
 $fecha = null;
 $hora = null;
