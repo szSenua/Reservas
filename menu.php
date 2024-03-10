@@ -53,6 +53,7 @@
 
         ?>
             <a href="index.php">Realizar una reserva</a>
+            <a href="panel_administracion.php">Panel de Administración</a>
             <a href="logout.php">Cerrar Sesión</a>
 
 
