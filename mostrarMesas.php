@@ -12,6 +12,10 @@ $hora = $_SESSION['hora'];
 // Obtener mesas disponibles con la capacidad indicada
 $mesasDisponibles = obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora);
 
+// Crear formateadores de fecha y hora
+$fecha_formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+$hora_formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
+
 // Si no hay mesas disponibles con la capacidad indicada, intentar con el doble de la capacidad
 if (count($mesasDisponibles) == 0) {
     $mesasDisponibles = obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora, $comensales * 2);
@@ -150,7 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservar'])) {
         </div>
     <?php endif; ?>
     <form action="" method="post">
-        <p>Fecha: <?php echo (new DateTime($fecha))->format('l j F Y'); ?>. Hora: <?php echo (new DateTime($hora))->format('H:i'); ?></p>
+    <p>Fecha: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::FULL, IntlDateFormatter::NONE))->format(new DateTime($fecha)); ?>. <p>Hora: <?php echo (new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::SHORT))->format(new DateTime($hora)); ?></p>
+
         <p>Número de comensales: <?php echo $comensales; ?></p>
         <table border="1">
             <tr>

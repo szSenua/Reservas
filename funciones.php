@@ -133,3 +133,58 @@ function reservarMesa($con, $email, $restaurante, $numMesa, $fecha, $hora, $come
 
     return $estado;
 }
+
+function consultarMesasTiempoEspera($con, $restaurante, $fecha, $hora, $comensales, $tiempoEsperaMaximo){
+    if ($comensales <= 2) {
+        $capacidadRequerida = 2;
+    } elseif ($comensales <= 4) {
+        $capacidadRequerida = 4;
+    } else {
+        $capacidadRequerida = 8;
+    }
+    
+    // Consulta SQL para obtener las mesas reservadas y sus datos
+    $sql = "SELECT reservas.numMesa, mesa.capacidad, reservas.estado FROM reservas INNER JOIN mesa 
+    ON reservas.numMesa = mesa.numMesa 
+    AND mesa.capacidad = ?
+    AND reservas.fecha = ?
+    AND reservas.hora = ?";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(1, $capacidadRequerida);
+    $stmt->bindParam(2, $fecha);
+    $stmt->bindParam(3, $hora);
+    $stmt->execute();
+
+    $mesasTiempoEspera = [];
+
+    // Calcular el tiempo de espera estimado para cada reserva y almacenarlo en un array asociativo
+    while ($reserva = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $tiempoEspera = 0;
+        // Calcular el tiempo estimado basado en el estado de la reserva
+        if ($reserva['estado'] == "R") {
+            $tiempoEspera = 60;
+        } elseif ($reserva['estado'] == 'O') {
+            $tiempoEspera = 45;
+        } elseif ($reserva['estado'] == 'EC' || $reserva['estado'] == 'PA') {
+            $tiempoEspera = 10;
+        }
+
+        // Verificar si el tiempo de espera es menor o igual al tiempo máximo dispuesto por el cliente
+        if ($tiempoEspera <= $tiempoEsperaMaximo) {
+            // Calcula la nueva hora de reserva ajustando la hora original y restando el tiempo de espera máximo
+            $nuevaHoraReserva = strtotime($hora . ' +1 hour -' . $tiempoEsperaMaximo . ' minute + ' . $tiempoEsperaMaximo . ' minute');
+
+
+
+
+            $mesasTiempoEspera[$reserva['numMesa']] = [
+                'capacidad' => $reserva['capacidad'],
+                'tiempoEspera' => $tiempoEspera,
+                'nuevaHoraReserva' => date('H:i:s', $nuevaHoraReserva)
+            ];
+        }
+    }
+
+    return $mesasTiempoEspera;
+}

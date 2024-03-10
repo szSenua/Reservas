@@ -1,6 +1,7 @@
 <?php
 require_once "conecta.php";
 require_once "funciones.php";
+require_once "menu.php";
 
 $restaurantes = array();
 
@@ -81,24 +82,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
+        }
+
+        .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            height: 100vh;
-            /* Establece la altura del cuerpo para ocupar toda la altura de la ventana */
+            align-items: center;
+            height: 90dvh;
         }
 
         form {
             width: 100%;
-            /* Ajusta el ancho del formulario */
             max-width: 400px;
-            /* Establece un ancho máximo para evitar que el formulario se extienda demasiado */
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            /* Agrega sombra al formulario */
         }
 
         h2 {
@@ -144,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
 </head>
 
 <body>
-
+<div class="container">
     <form action="" name="form-restaurante" method="post">
         <?php
         echo "<ul>";
@@ -208,6 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
         </select>
         <input type="submit" name="enviar" value="Enviar">
     </form>
+        </div>
 </body>
 
 </html>

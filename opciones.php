@@ -95,7 +95,7 @@ Le ofrecemos las siguientes alternativas:</h2>
             <select name="nuevo_restaurante">
                 <option value="<?php echo $restauranteAlternativo; ?>"><?php echo $restauranteAlternativo; ?></option>
             </select>
-            <input type="submit" value="Seleccionar">
+            <input type="submit" value="Seleccionar" name="consultar_restaurante">
         </form>
 
         <form action="nueva_reserva.php" method="post">
@@ -107,7 +107,7 @@ Le ofrecemos las siguientes alternativas:</h2>
                 <option value="90">1 hora y media</option>
                 <option value="105">1 hora y 45 minutos</option>
             </select>
-            <input type="submit" value="Seleccionar">
+            <input type="submit" value="Seleccionar" name="consultar_tiempo" >
         </form>
     </div>
 
