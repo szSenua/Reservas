@@ -3,6 +3,12 @@ require_once 'conecta.php';
 require_once 'funciones.php';
 require_once 'menu.php';
 
+//Si no es administrador, redirigir al menú
+if($_SESSION['tipoUsuario'] !== "administrador"){
+    header("Location: menu.php");
+}
+
+
 // Obtener la fecha y hora actual
 $fechaHoraActual = new DateTime();
 
