@@ -54,6 +54,7 @@
         ?>
             <a href="index.php">Realizar una reserva</a>
             <a href="panel_administracion.php">Panel de Administración</a>
+            <a href="borrar_reservas_caducadas.php">Borrar Reservas Caducadas</a>
             <a href="logout.php">Cerrar Sesión</a>
 
 
@@ -62,7 +63,7 @@
         } else {
         ?>
 
-            <a href="login.php">Zona Administrador</a>
+            <a href="login.php">Login Administrador</a>
             <a href="index.php">Realizar una reserva</a>
 
         <?php

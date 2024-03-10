@@ -49,7 +49,8 @@ function leerDatos($archivo)
 
 //Función para comprobar si hay mesa disponible con los datos que proporciona el cliente
 
-function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora){
+function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora)
+{
     // Calcular la hora anterior y posterior a la hora especificada
     $horaInicio = date('H:i:s', strtotime('-1 hour', strtotime($hora)));
     $horaFin = date('H:i:s', strtotime('+1 hour', strtotime($hora)));
@@ -77,10 +78,10 @@ function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora)
             HAVING COUNT(reservas.numMesa) = 0
             AND mesa.capacidad = :capacidad_requerida";
 
-  
+
     $stmt = $con->prepare($sql);
 
-    
+
     $stmt->execute(array(
         ':fecha' => $fecha,
         ':hora_inicio' => $horaInicio,
@@ -89,18 +90,19 @@ function obtenerMesasDisponibles($con, $restaurante, $comensales, $fecha, $hora)
         ':capacidad_requerida' => $capacidadRequerida
     ));
 
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function existeUsuario($con, $email, $contrasena){
+function existeUsuario($con, $email, $contrasena)
+{
     $sql = "SELECT * FROM administradores where email = ? and contrasena = ?";
 
     $stmt = $con->prepare($sql);
-    $stmt -> bindParam(1, $email);
-    $stmt -> bindParam(2, $contrasena);
+    $stmt->bindParam(1, $email);
+    $stmt->bindParam(2, $contrasena);
 
-    $stmt -> execute();
+    $stmt->execute();
     if ($stmt->rowCount() > 0) {
         $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
         // Cerrar conexión
@@ -113,7 +115,8 @@ function existeUsuario($con, $email, $contrasena){
     }
 }
 
-function reservarMesa($con, $email, $restaurante, $numMesa, $fecha, $hora, $comensales){
+function reservarMesa($con, $email, $restaurante, $numMesa, $fecha, $hora, $comensales)
+{
 
     $sql = "INSERT INTO reservas (numMesa, restaurante, email, fecha, hora, estado, numPersonas)
     VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -134,7 +137,8 @@ function reservarMesa($con, $email, $restaurante, $numMesa, $fecha, $hora, $come
     return $estado;
 }
 
-function consultarMesasTiempoEspera($con, $restaurante, $fecha, $hora, $comensales, $tiempoEsperaMaximo){
+function consultarMesasTiempoEspera($con, $restaurante, $fecha, $hora, $comensales, $tiempoEsperaMaximo)
+{
     if ($comensales <= 2) {
         $capacidadRequerida = 2;
     } elseif ($comensales <= 4) {
@@ -142,7 +146,7 @@ function consultarMesasTiempoEspera($con, $restaurante, $fecha, $hora, $comensal
     } else {
         $capacidadRequerida = 8;
     }
-    
+
     // Consulta SQL para obtener las mesas reservadas y sus datos
     $sql = "SELECT reservas.numMesa, mesa.capacidad, reservas.estado FROM reservas INNER JOIN mesa 
     ON reservas.numMesa = mesa.numMesa 
@@ -188,3 +192,41 @@ function consultarMesasTiempoEspera($con, $restaurante, $fecha, $hora, $comensal
 
     return $mesasTiempoEspera;
 }
+
+function obtenerReservas($con)
+{
+    $sql = "SELECT * FROM reservas";
+
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+
+    while ($reservas = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        yield $reservas;
+    }
+}
+
+function obtenerEstados($con){
+    $sql = "SHOW COLUMNS FROM `reservas` LIKE 'estado'";
+    $stmt = $con->query($sql);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $type = $row['Type'];
+    preg_match('/enum\((.*)\)$/', $type, $matches);
+    $vals = explode(',', $matches[1]);
+    $enumValues = array();
+    foreach ($vals as $val) {
+        $enumValues[] = trim($val, "'");
+    }
+    return $enumValues;
+}
+
+function obtenerReservaPorDatos($conexion, $restaurante, $numMesa, $fecha, $hora) {
+    $sql = "SELECT * FROM reservas WHERE restaurante = :restaurante AND numMesa = :numMesa AND fecha = :fecha AND hora = :hora";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(':restaurante', $restaurante, PDO::PARAM_STR);
+    $stmt->bindParam(':numMesa', $numMesa, PDO::PARAM_INT);
+    $stmt->bindParam(':fecha', $fecha, PDO::PARAM_STR);
+    $stmt->bindParam(':hora', $hora, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
